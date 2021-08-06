@@ -60,8 +60,9 @@ def redraw_window():
 def spawn_obstacle():
     window.blit(list_of_obstacles[0].image, (list_of_obstacles[0].x, list_of_obstacles[0].y))   
     window.blit(list_of_obstacles[1].image, (list_of_obstacles[1].x, list_of_obstacles[1].y))   
-    list_of_obstacles[0].move()
-    list_of_obstacles[1].move()
+    if player.alive:
+        list_of_obstacles[0].move()
+        list_of_obstacles[1].move()
     if list_of_obstacles[0].x+list_of_obstacles[0].width<0:
         list_of_obstacles[0].x = window_size[0]
     if list_of_obstacles[1].x + list_of_obstacles[1].width< 0:
@@ -87,7 +88,7 @@ def player_animation():
         window.blit(standing[player.standing_animation_counter//8], (player.x, player.y))
         player.standing_animation_counter+=1
     
-    #player.death(list_of_obstacles, item)
+    player.death(list_of_obstacles, item)
     if player.alive == False and player.death_number!=FPS:
         window.blit(death[player.death_counter//6], (player.x, player.y))
         player.death_counter+=1
