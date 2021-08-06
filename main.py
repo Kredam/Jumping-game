@@ -26,16 +26,16 @@ game_over=pygame.transform.scale((pygame.image.load("/home/adam/Projects/Python/
 #load all moving png files to a list with list comprehession
 
 #obstacles
-lava = Obstacles(window_size[0], 490, 300, 285, 10)
+lava = Obstacles(window_size[0], 490, 300, 285, 20)
 lava.load_image("/home/adam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/lava/lava0.png")
 
-lava2 = Obstacles(window_size[0], 490, 300, 285, 10)
+lava2 = Obstacles(window_size[0], 490, 300, 285, 20)
 lava.load_image("/home/adam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/lava/lava0.png")
 
-spikes = Obstacles(window_size[0], 570, 300, 285, 10)
+spikes = Obstacles(window_size[0], 570, 300, 285, 0)
 spikes.load_image("/home/adam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/spikes.png")
 
-spikes2 = Obstacles(window_size[0], 490, 300, 285, 10)
+spikes2 = Obstacles(window_size[0], 490, 300, 285, 20)
 spikes2.load_image("/home/adam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/spikes.png")
 
 list_of_obstacles=[lava, spikes, lava2, spikes2]
@@ -58,24 +58,17 @@ def redraw_window():
     pygame.display.update()
 
 def spawn_obstacle():
-    global item
-    print(item)
-    obstacle_spawned=list_of_obstacles[item]
-    if obstacle_spawned.spawned==False:
-        window.blit(obstacle_spawned.image, (obstacle_spawned.x, obstacle_spawned.y))
-        obstacle_spawned.counter+=1
-        if player.alive:
-            obstacle_spawned.move()
-        obstacle_spawned.spawned==True
-        if item == 0 and list_of_obstacles[1].x < 0:
-            list_of_obstacles[1].x == window_size[0]
-        if item == 1 and list_of_obstacles[0].x < 0:
-            list_of_obstacles[0].x == window_size[0]
-        if(obstacle_spawned.x + obstacle_spawned.width <0):
-            if(item == 1):
-                item = 0
-            item+=1
-
+    window.blit(list_of_obstacles[0].image, (list_of_obstacles[0].x, list_of_obstacles[0].y))   
+    window.blit(list_of_obstacles[1].image, (list_of_obstacles[1].x, list_of_obstacles[1].y))   
+    list_of_obstacles[0].move()
+    list_of_obstacles[1].move()
+    if list_of_obstacles[0].x+list_of_obstacles[0].width<0:
+        list_of_obstacles[0].x = window_size[0]
+    if list_of_obstacles[1].x + list_of_obstacles[1].width< 0:
+        list_of_obstacles[1].x = window_size[0]
+    if list_of_obstacles[0].x < 500:
+        list_of_obstacles[1].velocity=20
+   
 def player_animation():
     if player.moving_left or player.moving_right:
         player.standing_animation_counter=0
