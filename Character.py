@@ -13,7 +13,7 @@ class Character:
         self.moving_right = False
         self.wounded = False
         self.isJump = False
-        self.movement_speed = 10
+        self.movement_speed = 20
         self.movement_animation_counter = 0
         self.running_animation = 0
         self.death_counter = 0
@@ -34,5 +34,5 @@ class Character:
             self.moving_left = False
 
     def death(self, obstacles, item):
-        if obstacles[item].x + obstacles[item].width > self.x > obstacles[item].x:
+        if obstacles[item].x + obstacles[item].width > self.x > obstacles[item].x and self.y >= obstacles[item].y:
             self.alive = False

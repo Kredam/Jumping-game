@@ -20,6 +20,7 @@ death = [pygame.transform.scale(pygame.image.load(img), [player.width, player.he
 
 # window
 window_size = width, height = 1280, 768
+
 window = pygame.display.set_mode(window_size)
 pygame.display.set_caption("The Epic Sword Guy")
 bg = pygame.transform.scale(pygame.image.load(
@@ -38,7 +39,6 @@ spikes = Obstacles(window_size[0], 570, 300, 285, 0)
 spikes.load_image("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/spikes.png")
 
 list_of_obstacles = [lava, spikes]
-print(type(list_of_obstacles))
 item = 0
 FPS = 27
 
@@ -49,9 +49,8 @@ def redraw_window():
     spawn_obstacle()
 
     player_animation()
-    if lava.counter >= FPS or player.death_counter > FPS:
+    if lava.counter >= FPS:
         lava.counter = 0
-        player.death_counter = 0
     else:
         lava.counter += 1
 
@@ -89,17 +88,19 @@ def player_animation():
             player.running_animation = 0
         window.blit(running[player.running_animation // 4], (player.x, player.y))
         player.running_animation += 1
-    if player.jumpCount >= -10:
-        neg = 1
-        if player.jumpCount < 0:
-            neg = -1
-        player.y -= (player.jumpCount**2) * 0.5 * neg
-        player.jumpCount -= 1
-    else:
-        player.jumpCount = 10
+    if player.alive:
+        if player.jumpCount >= -10:
+            neg = 1
+            if player.jumpCount < 0:
+                neg = -1
+            player.y -= (player.jumpCount**2) * 0.5 * neg
+            player.jumpCount -= 1
+        else:
+            player.jumpCount = 10
 
+    player.death(list_of_obstacles, 0)
+    player.death(list_of_obstacles, 1)
 
-    #player.death(list_of_obstacles, item)
     if player.alive is False and player.death_counter != FPS:
         window.blit(death[player.death_counter // 8], (player.x, player.y))
         player.death_counter += 1
