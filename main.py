@@ -9,17 +9,14 @@ player_coordinates = [0, 575]
 player = Character.Character(player_coordinates[0], player_coordinates[1], player_size[0], player_size[1])
 player_img_standing = pygame.image.load(
     "/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/standing/tile000.png")
-player_img_standing = pygame.transform.scale(player_img_standing, [player.width, player.height])
-walk_right = [pygame.transform.scale(pygame.image.load(img), [player.width, player.height]) for img in glob.glob(
+running = [pygame.transform.scale(pygame.image.load(img), [player.width, player.height]) for img in glob.glob(
     "/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/moving/*.png")]
 walk_left = [
     pygame.transform.flip(pygame.transform.scale(pygame.image.load(img), [player.width, player.height]), True, False)
     for img in
-    glob.glob("/home/adam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/moving/*.png")]
-standing = [pygame.transform.scale(pygame.image.load(img), [player.width, player.height]) for img in glob.glob(
-    "/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/standing/*.png")]
+    glob.glob("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/moving/*.png")]
 death = [pygame.transform.scale(pygame.image.load(img), [player.width, player.height]) for img in
-         glob.glob("/home/kadam/Downloads/ezgif-6-dcdffdad9d70-png-42x42-sprite-png/*.png")]
+         glob.glob("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/death/*.png")]
 
 # window
 window_size = width, height = 1280, 768
@@ -37,16 +34,10 @@ game_over = pygame.transform.scale(
 lava = Obstacles(window_size[0], 490, 300, 285, 20)
 lava.load_image("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/lava/lava0.png")
 
-lava2 = Obstacles(window_size[0], 490, 300, 285, 20)
-lava.load_image("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/lava/lava0.png")
-
 spikes = Obstacles(window_size[0], 570, 300, 285, 0)
 spikes.load_image("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/spikes.png")
 
-spikes2 = Obstacles(window_size[0], 490, 300, 285, 20)
-spikes2.load_image("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/spikes.png")
-
-list_of_obstacles = [lava, spikes, lava2, spikes2]
+list_of_obstacles = [lava, spikes]
 print(type(list_of_obstacles))
 item = 0
 FPS = 27
@@ -83,28 +74,36 @@ def spawn_obstacle():
 
 def player_animation():
     if player.moving_left or player.moving_right:
-        player.standing_animation_counter = 0
+        player.running_animation = 0
         if player.movement_animation_counter >= FPS:
             player.movement_animation_counter = 0
+        if player.moving_right:
+            window.blit(running[player.movement_animation_counter//4], (player.x, player.y))
+            player.movement_animation_counter += 1
         if player.moving_left:
             window.blit(walk_left[player.movement_animation_counter // 4], (player.x, player.y))
             player.movement_animation_counter += 1
-        if player.moving_right:
-            window.blit(walk_right[player.movement_animation_counter // 4], (player.x, player.y))
-            player.movement_animation_counter += 1
     elif player.alive:
         player.movement_animation_counter = 0
-        if player.standing_animation_counter >= FPS:
-            player.standing_animation_counter = 0
-        window.blit(standing[player.standing_animation_counter // 8], (player.x, player.y))
-        player.standing_animation_counter += 1
+        if player.running_animation >= FPS:
+            player.running_animation = 0
+        window.blit(running[player.running_animation // 4], (player.x, player.y))
+        player.running_animation += 1
+    if player.jumpCount >= -10:
+        neg = 1
+        if player.jumpCount < 0:
+            neg = -1
+        player.y -= (player.jumpCount**2) * 0.5 * neg
+        player.jumpCount -= 1
+    else:
+        player.jumpCount = 10
 
-    player.death(list_of_obstacles, item)
-    if player.alive is False and player.death_number != FPS:
+
+    #player.death(list_of_obstacles, item)
+    if player.alive is False and player.death_counter != FPS:
         window.blit(death[player.death_counter // 8], (player.x, player.y))
         player.death_counter += 1
-        player.death_number += 1
-    if player.death_number == FPS:
+    if player.death_counter == FPS:
         window.blit(death[-1], (player.x, player.y))
     if not player.alive:
         window.blit(game_over, (200, 100))

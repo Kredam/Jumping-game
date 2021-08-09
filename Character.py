@@ -12,25 +12,24 @@ class Character:
         self.moving_left = False
         self.moving_right = False
         self.wounded = False
+        self.isJump = False
         self.movement_speed = 10
         self.movement_animation_counter = 0
-        self.standing_animation_counter = 0
-        self.move_counter = 0
+        self.running_animation = 0
         self.death_counter = 0
-        self.death_number = 0
+        self.jumpCount = 10
 
     def movement(self, key):
         if key[pygame.K_LEFT] and self.alive:
             self.x -= self.movement_speed
             self.moving_left = True
             self.moving_right = False
-
         elif key[pygame.K_RIGHT] and self.alive:
             self.x += self.movement_speed
             self.moving_right = True
             self.moving_left = False
         else:
-            self.move_counter = 0
+            self.movement_animation_counter = 0
             self.moving_right = False
             self.moving_left = False
 
