@@ -1,5 +1,6 @@
 from Obstacles import *
 import pygame
+from menu import *
 import Character
 import glob
 
@@ -20,7 +21,6 @@ death = [pygame.transform.scale(pygame.image.load(img), [player.width, player.he
 
 # window
 window_size = width, height = 1280, 768
-
 window = pygame.display.set_mode(window_size)
 pygame.display.set_caption("The Epic Sword Guy")
 bg = pygame.transform.scale(pygame.image.load(
@@ -29,7 +29,9 @@ game_over = pygame.transform.scale(
     (pygame.image.load("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Menu/GameOver.png")),
     [880, 668])
 
-# load all moving png files to a list with list comprehession
+
+#menu
+menu = menu(24)
 
 # obstacles
 lava = Obstacles(window_size[0], 490, 300, 285, 20)
@@ -53,7 +55,7 @@ def redraw_window():
         lava.counter = 0
     else:
         lava.counter += 1
-
+    menu.draw_score(window, window_size[0]-200, 50, player.score)
     pygame.display.update()
 
 
