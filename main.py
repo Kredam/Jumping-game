@@ -1,6 +1,6 @@
 from Obstacles import *
 import pygame
-from menu import *
+from Menu import *
 import Character
 import glob
 
@@ -9,36 +9,35 @@ player_size = (150, 150)
 player_coordinates = [0, 575]
 player = Character.Character(player_coordinates[0], player_coordinates[1], player_size[0], player_size[1])
 player_img_standing = pygame.image.load(
-    "/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/standing/tile000.png")
+    "/home/kadam/Projects/Python/TheEpicSwordGuy/assets/character/standing/tile000.png")
 running = [pygame.transform.scale(pygame.image.load(img), [player.width, player.height]) for img in glob.glob(
-    "/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/moving/*.png")]
+    "/home/kadam/Projects/Python/TheEpicSwordGuy/assets/character/moving/*.png")]
 walk_left = [
     pygame.transform.flip(pygame.transform.scale(pygame.image.load(img), [player.width, player.height]), True, False)
     for img in
-    glob.glob("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/moving/*.png")]
+    glob.glob("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/character/moving/*.png")]
 death = [pygame.transform.scale(pygame.image.load(img), [player.width, player.height]) for img in
-         glob.glob("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/character/death/*.png")]
+         glob.glob("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/character/death/*.png")]
 
 # window
 window_size = width, height = 1280, 768
 window = pygame.display.set_mode(window_size)
 pygame.display.set_caption("The Epic Sword Guy")
 bg = pygame.transform.scale(pygame.image.load(
-    "/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/background/Background.png"), window_size)
+    "/home/kadam/Projects/Python/TheEpicSwordGuy/assets/background/Background.png"), window_size)
 game_over = pygame.transform.scale(
-    (pygame.image.load("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Menu/GameOver.png")),
+    (pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/GameOver.png")),
     [880, 668])
 
-
-#menu
-menu = menu(24)
+# menu
+menu = Menu(24)
 
 # obstacles
 lava = Obstacles(window_size[0], 490, 300, 285, 20)
-lava.load_image("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/lava/lava0.png")
+lava.load_image("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Obstacles/lava/lava0.png")
 
 spikes = Obstacles(window_size[0], 570, 300, 285, 0)
-spikes.load_image("/home/kadam/Projects/Python/Practice_And_Learning/TheEpicSwordGuy/assets/Obstacles/spikes.png")
+spikes.load_image("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Obstacles/spikes.png")
 
 list_of_obstacles = [lava, spikes]
 item = 0
@@ -47,15 +46,15 @@ FPS = 27
 
 def redraw_window():
     window.blit(bg, (0, 0))
-
-    spawn_obstacle()
-
-    player_animation()
-    if lava.counter >= FPS:
-        lava.counter = 0
+    if menu.game_started:
+        key = pygame.key.get_pressed()
+        player.movement(key)
+        spawn_obstacle()
+        player_animation()
+        menu.draw_score(window, window_size[0] - 200, 50, player.score)
     else:
-        lava.counter += 1
-    menu.draw_score(window, window_size[0]-200, 50, player.score)
+        menu.draw_main_menu(window, window_size[0], window_size[1])
+
     pygame.display.update()
 
 
@@ -79,7 +78,7 @@ def player_animation():
         if player.movement_animation_counter >= FPS:
             player.movement_animation_counter = 0
         if player.moving_right:
-            window.blit(running[player.movement_animation_counter//4], (player.x, player.y))
+            window.blit(running[player.movement_animation_counter // 4], (player.x, player.y))
             player.movement_animation_counter += 1
         if player.moving_left:
             window.blit(walk_left[player.movement_animation_counter // 4], (player.x, player.y))
@@ -90,18 +89,15 @@ def player_animation():
             player.running_animation = 0
         window.blit(running[player.running_animation // 4], (player.x, player.y))
         player.running_animation += 1
-    if player.alive:
-        if player.jumpCount >= -10:
-            neg = 1
-            if player.jumpCount < 0:
-                neg = -1
-            player.y -= (player.jumpCount**2) * 0.5 * neg
-            player.jumpCount -= 1
-        else:
-            player.jumpCount = 10
 
-    player.death(list_of_obstacles, 0)
-    player.death(list_of_obstacles, 1)
+    lava_damage = player.damage_player(list_of_obstacles, 0)
+    spike_damage = player.damage_player(list_of_obstacles, 1)
+    while player.lives > 0:
+        try:
+            print(next(lava_damage))
+            print(next(spike_damage))
+        except StopIteration:
+            break
 
     if player.alive is False and player.death_counter != FPS:
         window.blit(death[player.death_counter // 8], (player.x, player.y))
@@ -121,9 +117,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
-        key = pygame.key.get_pressed()
-        player.movement(key)
 
         redraw_window()
 

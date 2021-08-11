@@ -3,13 +3,14 @@ import pygame
 
 
 class Obstacles:
-    def __init__(self, x, y, width, height, velocity):
+    def __init__(self, x, y, width, height, velocity, image=""):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.velocity = velocity
         self.counter = 0
+        self.image = image
         self.spawned = False
 
     def move(self):
