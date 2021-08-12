@@ -13,13 +13,15 @@ colors = {
 
 menu_size = (1000, 750)
 
-
 non_selected_image = pygame.transform.scale(
     pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/Main.png"), (menu_size[0], menu_size[1]))
 start_selected_image = pygame.transform.scale(
-    pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/StartSelected.png"), (menu_size[0], menu_size[1]))
+    pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/StartSelected.png"),
+    (menu_size[0], menu_size[1]))
 leaderboard_selected_image = pygame.transform.scale(
-    pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/LeaderboardSelected.png"), (menu_size[0], menu_size[1]))
+    pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/LeaderboardSelected.png"),
+    (menu_size[0], menu_size[1]))
+
 
 class Menu:
     def __init__(self, font_size, font_type=pygame.freetype.get_default_font()):
@@ -36,7 +38,6 @@ class Menu:
         font.render_to(surface, (x_position, y_position), "Score = " + str(score), colors["grey_dark"], self.font_size)
 
     def menu_actions(self, mouse_x, mouse_y):
-        print(self.main_leaderboard_selected)
         # hardcoded for now, will be changed at the end of the project
         if 811 >= mouse_x >= 475 and 291 >= mouse_y >= 205:
             if pygame.mouse.get_pressed(3) == (1, 0, 0):
@@ -56,17 +57,14 @@ class Menu:
     def draw_main_menu(self, surface, surface_width, surface_height):
         mouse_x = pygame.mouse.get_pos()[0]
         mouse_y = pygame.mouse.get_pos()[1]
-        print(f"x = {mouse_x}, y = {mouse_y}")
         self.menu_actions(mouse_x, mouse_y)
         # left upper corner x = 476, y = 309
         # right lower corner x = 811, y = 400
         if self.main_non_selected:
-            surface.blit(non_selected_image, ((surface_width-menu_size[0])/2, (surface_height-menu_size[1])/2))
+            surface.blit(non_selected_image, ((surface_width - menu_size[0]) / 2, (surface_height - menu_size[1]) / 2))
         if self.main_start_selected:
-            surface.blit(start_selected_image, ((surface_width-menu_size[0])/2, (surface_height-menu_size[1])/2))
+            surface.blit(start_selected_image,
+                         ((surface_width - menu_size[0]) / 2, (surface_height - menu_size[1]) / 2))
         if self.main_leaderboard_selected:
-            surface.blit(leaderboard_selected_image, ((surface_width-menu_size[0])/2, (surface_height-menu_size[1])/2))
-
-
-
-
+            surface.blit(leaderboard_selected_image,
+                         ((surface_width - menu_size[0]) / 2, (surface_height - menu_size[1]) / 2))
