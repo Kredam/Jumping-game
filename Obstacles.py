@@ -1,6 +1,7 @@
 from pygame import *
 import pygame
 
+# (566, 701)
 
 class Obstacles:
     def __init__(self, x, y, width, height, velocity, image=""):
