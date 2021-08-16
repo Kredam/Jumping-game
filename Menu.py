@@ -1,3 +1,5 @@
+import os
+
 import pygame as pg
 from pygame.locals import *
 import pygame
@@ -14,12 +16,12 @@ colors = {
 menu_size = (1000, 750)
 
 non_selected_image = pygame.transform.scale(
-    pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/Main.png"), (menu_size[0], menu_size[1]))
+    pygame.image.load(os.path.join("assets/Menu", "Main.png")), (menu_size[0], menu_size[1]))
 start_selected_image = pygame.transform.scale(
-    pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/StartSelected.png"),
+    pygame.image.load(os.path.join("assets/Menu", "StartSelected.png")),
     (menu_size[0], menu_size[1]))
 leaderboard_selected_image = pygame.transform.scale(
-    pygame.image.load("/home/kadam/Projects/Python/TheEpicSwordGuy/assets/Menu/LeaderboardSelected.png"),
+    pygame.image.load(os.path.join("assets/Menu", "LeaderboardSelected.png")),
     (menu_size[0], menu_size[1]))
 
 
@@ -53,6 +55,14 @@ class Menu:
             self.main_start_selected = False
             self.main_non_selected = True
             self.main_leaderboard_selected = False
+
+    def check_game_ended(self, player_alive):
+        if player_alive is False and self.game_started:
+            self.game_started = False
+            self.main_non_selected = True
+
+    def leaderboard(self):
+        return 0
 
     def draw_main_menu(self, surface, surface_width, surface_height):
         mouse_x = pygame.mouse.get_pos()[0]
