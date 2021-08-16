@@ -15,19 +15,16 @@ window_size = width, height = 1280, 768
 window = pygame.display.set_mode(window_size)
 pygame.display.set_caption("The Epic Sword Guy")
 bg = pygame.transform.scale(pygame.image.load(
-    "D:\Projects\Python\TheEpicSwordGuy/assets/background/Background.png"), window_size)
-game_over = pygame.transform.scale(
-    (pygame.image.load("D:\Projects\Python\TheEpicSwordGuy/assets/Menu/GameOver.png")),
-    [880, 668])
+    os.path.join("assets/background", "Background.png")), window_size)
 
 # menu
 menu = Menu(24)
 # obstacles
 lava = Obstacles(window_size[0], 700, 300, 285, 15)
-lava.load_image("D:\Projects\Python\TheEpicSwordGuy/assets/Obstacles/lava/lava0.png")
+lava.load_image(os.path.join("assets/Obstacles/lava", "lava0.png"))
 
 spikes = Obstacles(window_size[0], 700, 300, 285, 0)
-spikes.load_image("D:\Projects\Python\TheEpicSwordGuy/assets/Obstacles/spikes.png")
+spikes.load_image(os.path.join("assets/Obstacles", "spikes.png"))
 
 list_of_obstacles = [lava, spikes]
 item = 0
@@ -37,6 +34,7 @@ FPS = 27
 def redraw_window():
     window.blit(bg, (0, 0))
     if menu.game_started:
+        player.alive = True
         key = pygame.key.get_pressed()
         player.movement(key)
         player.draw_remaining_health(window)
@@ -45,9 +43,8 @@ def redraw_window():
         player.damage_player(list_of_obstacles, 0)
         player.damage_player(list_of_obstacles, 1)
         menu.draw_score(window, window_size[0] - 200, 50, player.score)
-        menu.check_game_ended(player.alive)
-    elif menu.game_ended:
-        return 0
+        if player.alive is False:
+            menu.restart_game(player, list_of_obstacles)
     else:
         menu.draw_main_menu(window, window_size[0], window_size[1])
 

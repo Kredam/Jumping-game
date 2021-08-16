@@ -56,10 +56,17 @@ class Menu:
             self.main_non_selected = True
             self.main_leaderboard_selected = False
 
-    def check_game_ended(self, player_alive):
-        if player_alive is False and self.game_started:
-            self.game_started = False
-            self.main_non_selected = True
+    def restart_game(self, player, obstacles):
+        player.lives = 3
+        player.x = 0
+        obstacles[-1].velocity = 0
+        for obstacle in obstacles:
+            obstacle.x = 1280
+        self.game_started = False
+        self.main_non_selected = True
+        self.main_start_selected = False
+        self.main_non_selected = False
+        self.main_leaderboard_selected = False
 
     def leaderboard(self):
         return 0
