@@ -1,11 +1,14 @@
 import glob
+import time
 import os
+import timeit
+
 from pygame import *
 import pygame
 
 health_scale = (300, 300)
 health_image = [pygame.transform.scale(pygame.image.load(img), [health_scale[0], health_scale[1]]) for img in
-                glob.glob("D:\Projects\Python\TheEpicSwordGuy/assets/character/Health/*.png")]
+                glob.glob(os.path.join("assets/character/Health", "*.png"))]
 health = {
     "1": health_image[0],
     "2": health_image[2],
@@ -22,7 +25,8 @@ class Character:
         self.width = width
         self.height = height
         self.lives = 3
-        self.alive = True
+        self.damage_delay = 2.0
+        self.alive = False
         self.moving_left = False
         self.moving_right = False
         self.wound = False
@@ -47,17 +51,22 @@ class Character:
 
     # fix collision detection
     def check_collision(self, obstacles, item):
-        if obstacles[item].x + obstacles[item].width > self.x > obstacles[item].x and self.y + self.height >= obstacles[item].y:
+        if obstacles[item].x + obstacles[item].width > self.x > obstacles[item].x - 75 and self.y + self.height >= obstacles[item].y:
+            print(f"end of obstacle = {obstacles[item].x + obstacles[item].width}")
+            print(f"player x pos = {self.x}")
+            print(f"start of obstacle = {obstacles[item].x}")
+            print("|||||||||||||||||||||||||||||||||||||||||||||||||")
+
+            print(f"obstacle y = {obstacles[item].y-obstacles[item].height}")
+            print(f"player y pos = {self.y}")
+            print("------------------------------------------------")
             return True
         else:
             return False
 
     def damage_player(self, obstacle, item):
-        if self.check_collision(obstacle, item) and self.wound is False:
+        if self.check_collision(obstacle, item):
             self.lives -= 1
-            self.wound = True
-        if self.check_collision(obstacle, item) is False and self.wound is True:
-            self.wound = False
         if self.lives == 0:
             self.alive = False
 

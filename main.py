@@ -6,7 +6,7 @@ import Character
 import glob
 
 # player
-player_size = (150, 150)
+player_size = (75, 150)
 player_coordinates = [0, 575]
 player = Character.Character(player_coordinates[0], player_coordinates[1], player_size[0], player_size[1])
 
