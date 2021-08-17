@@ -51,7 +51,7 @@ class Character:
 
     # fix collision detection
     def check_collision(self, obstacles, item):
-        if obstacles[item].x + obstacles[item].width > self.x > obstacles[item].x - 75 and self.y + self.height >= obstacles[item].y:
+        if obstacles[item].x + obstacles[item].width > self.x > obstacles[item].x - 35 and self.y + self.height >= obstacles[item].y:
             print(f"end of obstacle = {obstacles[item].x + obstacles[item].width}")
             print(f"player x pos = {self.x}")
             print(f"start of obstacle = {obstacles[item].x}")
