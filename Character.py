@@ -22,11 +22,12 @@ class Character:
         self.x = x
         self.y = y
         self.nr_of_times_damaged = 0
+        self.timer = 0
         self.width = width
         self.height = height
         self.lives = 3
-        self.damage_delay = 2.0
-        self.alive = False
+        self.damaged = False
+        self.alive = True
         self.moving_left = False
         self.moving_right = False
         self.wound = False
@@ -37,38 +38,44 @@ class Character:
         self.death_counter = 0
         self.jumpCount = 10
         self.score = 0
+        self.name = ""
         self.load_images()
 
     def draw_remaining_health(self, surface):
         if self.lives == 3:
-            surface.blit(health["2"], (10, -50))
+            surface.blit(health["2"], (950, -5))
         elif self.lives == 2:
-            surface.blit(health["3"], (10, -50))
+            surface.blit(health["3"], (950, -5))
         elif self.lives == 1:
-            surface.blit(health["1"], (10, -50))
+            surface.blit(health["1"], (950, -5))
         else:
-            surface.blit(health["0"], (10, -50))
+            surface.blit(health["0"], (950, -5))
 
     # fix collision detection
     def check_collision(self, obstacles, item):
         if obstacles[item].x + obstacles[item].width > self.x > obstacles[item].x - 35 and self.y + self.height >= obstacles[item].y:
-            print(f"end of obstacle = {obstacles[item].x + obstacles[item].width}")
-            print(f"player x pos = {self.x}")
-            print(f"start of obstacle = {obstacles[item].x}")
-            print("|||||||||||||||||||||||||||||||||||||||||||||||||")
-
-            print(f"obstacle y = {obstacles[item].y-obstacles[item].height}")
-            print(f"player y pos = {self.y}")
-            print("------------------------------------------------")
             return True
         else:
             return False
 
+    def set_username(self, name):
+        if len(self.name) == 0:
+            self.name = name
+        else:
+            self.name = ""
+            self.name = name
+
     def damage_player(self, obstacle, item):
-        if self.check_collision(obstacle, item):
+        if self.check_collision(obstacle, item) and self.damaged is False:
             self.lives -= 1
-        if self.lives == 0:
+        if self.lives <= 0:
             self.alive = False
+
+    def border_check(self, max_x):
+        if self.x - self.movement_speed < 0:
+            self.x = 0
+        if self.x + self.movement_speed > max_x - self.width:
+            self.x = max_x - self.width
 
     def movement(self, key):
         if key[pygame.K_LEFT] and self.alive:
