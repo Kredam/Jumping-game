@@ -95,6 +95,7 @@ class Menu:
     def back_to_main(self, surface, player, obstacles):
         surface.blit(back_button, (10, 10))
         if 10 <= pygame.mouse.get_pos()[0] <= 110 and 10 <= pygame.mouse.get_pos()[1] <= 110 and pygame.mouse.get_pressed(3) == (1, 0, 0):
+            player.name = ""
             self.restart_game(player, obstacles)
 
     def show_leaderboard(self, surface, surface_x, surface_y):

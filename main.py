@@ -88,15 +88,13 @@ def main():
                 run = False
             if evt.type == KEYDOWN and menu.game_started and player.alive is False:
                 if evt.unicode.isalpha():
-                    player_name += evt.unicode
+                    player.name += evt.unicode
                 if evt.key == K_BACKSPACE:
-                    player_name = player_name[:-1]
+                    player.name = player.name[:-1]
                 if evt.key == K_RETURN:
-                    player.set_username(player_name)
-                    player_name = ""
                     menu.save_player_stats(player)
                     menu.restart_game(player, list_of_obstacles)
-        menu.draw_text(window, window_size[0]-len(player_name)*15, window_size[1], player_name)
+        menu.draw_text(window, window_size[0]-len(player_name)*15, window_size[1], player.name)
         pygame.display.update()
         redraw_window()
 
