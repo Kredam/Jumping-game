@@ -39,6 +39,8 @@ class Character:
         self.jumpCount = 10
         self.score = 0
         self.name = ""
+        self.elapsed_time = pygame.time.get_ticks()
+        self.damage_cooldown = 300
         self.load_images()
 
     def draw_remaining_health(self, surface):
@@ -66,7 +68,9 @@ class Character:
             self.name = name
 
     def damage_player(self, obstacle, item):
-        if self.check_collision(obstacle, item) and self.damaged is False:
+        now = pygame.time.get_ticks()
+        if self.check_collision(obstacle, item) and now - self.elapsed_time >= self.damage_cooldown:
+            self.elapsed_time = now
             self.lives -= 1
         if self.lives <= 0:
             self.alive = False

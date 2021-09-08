@@ -77,6 +77,7 @@ class Menu:
         self.main_leaderboard_selected = False
         self.game_started = False
 
+    # store it in json file
     def load_player_stats(self):
         with open('Result.csv', mode='r') as csvfile:
             dict_reader = csv.DictReader(csvfile)
@@ -120,3 +121,5 @@ class Menu:
         if self.main_leaderboard_selected:
             surface.blit(leaderboard_selected_image,
                          ((surface_width - menu_size[0]) / 2, (surface_height - menu_size[1]) / 2))
+
+

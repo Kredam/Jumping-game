@@ -3,7 +3,7 @@ import random
 import time
 
 from Obstacles import *
-import pygame
+import pygame as py
 from Menu import *
 import Character
 import glob
@@ -76,7 +76,6 @@ def spawn_obstacle():
     if list_of_obstacles[0].x < distance:
         list_of_obstacles[1].velocity = 15
 
-#kuki
 def main():
     run = True
     clock = pygame.time.Clock()
