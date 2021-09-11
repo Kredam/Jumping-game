@@ -1,7 +1,5 @@
 import glob
-import time
 import os
-import timeit
 
 from pygame import *
 import pygame
