@@ -1,7 +1,6 @@
 import os
 import csv
 import pygame as pg
-from pygame.locals import *
 import pygame
 import pygame.freetype
 
@@ -26,8 +25,13 @@ leaderboard_selected_image = pygame.transform.scale(
 back_button = pygame.transform.scale(pygame.image.load(os.path.join("assets/Menu", "Back.png")), (100, 100))
 
 
+def draw_text(surface, x_pos, y_pos, text):
+    font2 = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 30)
+    font2.render_to(surface, (x_pos/2, y_pos/2), text, (255, 0, 0))
+
+
 class Menu:
-    def __init__(self, font_size, font_type=pygame.freetype.get_default_font()):
+    def __init__(self, font_size=14, font_type=pygame.freetype.get_default_font()):
         pygame.freetype.init()
         self.leaderboard_players = {}
         self.game_over_png = pygame.image.load(os.path.join("assets/Menu", "GameOver.png"))
@@ -39,9 +43,10 @@ class Menu:
         self.main_leaderboard_selected = False
         self.game_started = False
 
-    def draw_text(self, surface, x_pos, y_pos, text):
-        font2 = pygame.freetype.SysFont(pygame.freetype.get_default_font(), 30)
-        font2.render_to(surface, (x_pos/2, y_pos/2), text, (255, 0, 0))
+    def drag_game_over(self, player, menu, window, window_size):
+        if player.alive is False:
+            window.blit(menu.game_over_png, (300, 85))
+            draw_text(window, window_size[0]-400, window_size[1]-100, "Please insert your Username!")
 
     def menu_actions(self, mouse_x, mouse_y):
         if 811 >= mouse_x >= 475 and 291 >= mouse_y >= 205:
@@ -63,14 +68,15 @@ class Menu:
             self.main_leaderboard_selected = False
 
     def restart_game(self, player, obstacles):
-        #you have to make a sequence of list
         player.score = 0
         player.lives = 3
         player.x = 0
         player.alive = True
         obstacles[-1].velocity = 0
+        player.name = ""
         for obstacle in obstacles:
             obstacle.x = 1280
+            obstacle.velocity = 15
         self.main_non_selected = True
         self.leaderBoard_pressed = False
         self.main_start_selected = False
@@ -105,7 +111,7 @@ class Menu:
         while i <= 5:
             try:
                 surface_y += 100
-                self.draw_text(surface, surface_x-400, surface_y-300, f"{i}., {str(leaderboard.__next__())}")
+                draw_text(surface, surface_x-400, surface_y-300, f"{i}., {str(leaderboard.__next__())}")
             except StopIteration:
                 break
             i += 1
